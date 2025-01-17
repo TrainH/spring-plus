@@ -1,10 +1,13 @@
 package org.example.expert.domain.todo.service;
 
 import java.time.LocalDateTime;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 import org.example.expert.client.WeatherClient;
 import org.example.expert.domain.common.dto.AuthUser;
 import org.example.expert.domain.common.exception.InvalidRequestException;
+import org.example.expert.domain.todo.dto.TodoDto;
 import org.example.expert.domain.todo.dto.request.TodoSaveRequest;
 import org.example.expert.domain.todo.dto.response.TodoResponse;
 import org.example.expert.domain.todo.dto.response.TodoSaveResponse;
@@ -14,6 +17,7 @@ import org.example.expert.domain.todo.repository.TodoRepository;
 import org.example.expert.domain.user.dto.response.UserResponse;
 import org.example.expert.domain.user.entity.User;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -91,5 +95,12 @@ public class TodoService {
                 todo.getCreatedAt(),
                 todo.getModifiedAt()
         );
+    }
+
+
+    public Page<TodoDto.SearchResponse> searchTodos(TodoDto.SearchRequest request, Pageable pageable) {
+        List<TodoDto.SearchResponse> todos = todoQueryRepository.searchTodos(request, pageable);
+        Long commentCount = todoQueryRepository.getTotalCount(request);
+        return new PageImpl<>(todos, pageable, commentCount);
     }
 }
