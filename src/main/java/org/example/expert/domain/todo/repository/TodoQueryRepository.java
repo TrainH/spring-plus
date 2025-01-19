@@ -19,6 +19,7 @@ import java.util.Optional;
 
 import static com.querydsl.jpa.JPAExpressions.select;
 import static org.example.expert.domain.comment.entity.QComment.comment;
+import static org.example.expert.domain.manager.entity.QManager.manager;
 import static org.example.expert.domain.todo.entity.QTodo.todo;
 import static org.example.expert.domain.user.entity.QUser.user;
 
@@ -45,15 +46,18 @@ public class TodoQueryRepository {
                         select(Wildcard.count)
                                 .from(comment)
                                 .where(todo.id.eq(comment.todo.id)
-                                )
+                                ),
+                        select(Wildcard.count)
+                                .from(manager)
+                                .where(manager.todo.id.eq(todo.id))
                 )
 
         ).from(todo)
                 .where(
-                        eqTitle(request.title()),
+                        containsTitle(request.title()),
                         goeFromDate(request.fromDate()),
                         loeToDate(request.toDate()),
-                        eqManagerName(request.managerName())
+                        containsManagerName(request.managerName())
                 )
                 .orderBy(getSortOrders(pageable))
                 .limit(pageable.getPageSize())
@@ -70,6 +74,13 @@ public class TodoQueryRepository {
         return todo.title.eq(title);
     }
 
+    private BooleanExpression containsTitle(String title) {
+        if (title == null || title.isEmpty()) {
+            return null;
+        }
+        return todo.title.containsIgnoreCase(title);
+    }
+
     private BooleanExpression goeFromDate(LocalDateTime fromDate) {
         if (fromDate == null) {
             return null;
@@ -84,11 +95,11 @@ public class TodoQueryRepository {
         return todo.createdAt.loe(toDate);
     }
 
-    private BooleanExpression eqManagerName(String managerName) {
-        if (managerName == null) {
+    private BooleanExpression containsManagerName(String managerName) {
+        if (managerName == null || managerName.isEmpty()) {
             return null;
         }
-        return user.nickname.eq(managerName);
+        return user.nickname.containsIgnoreCase(managerName);
     }
 
     private OrderSpecifier<?>[] getSortOrders(Pageable pageable) {
@@ -119,10 +130,10 @@ public class TodoQueryRepository {
                         queryFactory.select(Wildcard.count)
                                 .from(todo)
                                 .where(
-                                        eqTitle(request.title()),
+                                        containsTitle(request.title()),
                                         goeFromDate(request.fromDate()),
                                         loeToDate(request.toDate()),
-                                        eqManagerName(request.managerName())
+                                        containsManagerName(request.managerName())
                                 )
                                 .fetchOne())
                 .orElse(0L);

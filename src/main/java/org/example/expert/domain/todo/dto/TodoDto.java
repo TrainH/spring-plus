@@ -13,13 +13,15 @@ public class TodoDto {
     public record SearchResponse(Long id,
                                  String title,
                                  LocalDateTime createdAt,
-                                 int commentCount) {
-        public SearchResponse(Todo todo, long commentCount) {
+                                 int commentCount,
+                                 int managerCount) {
+        public SearchResponse(Todo todo, long commentCount, long managerCount) {
             this(
                     todo.getId(),
                     todo.getTitle(),
                     todo.getCreatedAt(),
-                    (int) commentCount
+                    (int) commentCount,
+                    (int) managerCount
             );
         }
     }
