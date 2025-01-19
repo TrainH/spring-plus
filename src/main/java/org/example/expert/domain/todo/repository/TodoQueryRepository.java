@@ -52,7 +52,8 @@ public class TodoQueryRepository {
                 .where(
                         eqTitle(request.title()),
                         goeFromDate(request.fromDate()),
-                        loeToDate(request.toDate())
+                        loeToDate(request.toDate()),
+                        eqManagerName(request.managerName())
                 )
                 .orderBy(getSortOrders(pageable))
                 .limit(pageable.getPageSize())
@@ -82,6 +83,14 @@ public class TodoQueryRepository {
         }
         return todo.createdAt.loe(toDate);
     }
+
+    private BooleanExpression eqManagerName(String managerName) {
+        if (managerName == null) {
+            return null;
+        }
+        return user.nickname.eq(managerName);
+    }
+
     private OrderSpecifier<?>[] getSortOrders(Pageable pageable) {
         if (!pageable.getSort().isSorted()) {
             return new OrderSpecifier[]{
@@ -112,7 +121,8 @@ public class TodoQueryRepository {
                                 .where(
                                         eqTitle(request.title()),
                                         goeFromDate(request.fromDate()),
-                                        loeToDate(request.toDate())
+                                        loeToDate(request.toDate()),
+                                        eqManagerName(request.managerName())
                                 )
                                 .fetchOne())
                 .orElse(0L);

@@ -6,7 +6,7 @@ public class TodoDto {
     public record SearchRequest(String title,
                                 LocalDateTime fromDate,
                                 LocalDateTime toDate,
-                                String nickname
+                                String managerName
                                 ) {
     }
 
