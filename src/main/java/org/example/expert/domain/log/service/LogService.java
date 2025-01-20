@@ -16,7 +16,7 @@ public class LogService {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void saveLog(String action, String description,LocalDateTime createdAt) {
-        logRepository.save(new Log(action, description, createdAt));
+        logRepository.save(new Log("POST", action, description, createdAt));
     }
 
 }

@@ -15,13 +15,15 @@ public class Log {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String method;
     private String action;
-    private String description;
+    private String message;
     private LocalDateTime createdAt;
 
-    public Log(String action, String description, LocalDateTime createdAt) {
+    public Log(String method, String action, String message, LocalDateTime createdAt) {
+        this.method = method;
         this.action = action;
-        this.description = description;
+        this.message = message;
         this.createdAt = createdAt;
     }
 }
