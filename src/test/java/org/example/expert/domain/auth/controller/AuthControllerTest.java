@@ -44,10 +44,10 @@ public class AuthControllerTest {
     @DynamicPropertySource
     static void configureTestDatabase(DynamicPropertyRegistry registry) {
         // 데이터베이스 연결 설정
-        registry.add("spring.datasource.url", () -> "jdbc:mysql://localhost:3307/expert");
+        registry.add("spring.datasource.url", () -> "jdbc:mysql://localhost:3306/expert");
         registry.add("spring.datasource.driver-class-name", () -> "com.mysql.cj.jdbc.Driver");
         registry.add("spring.datasource.username", () -> "root");
-        registry.add("spring.datasource.password", () -> "password");
+        registry.add("spring.datasource.password", () -> "1234");
         registry.add("spring.jpa.hibernate.ddl-auto", () -> "update");
 
         // Hibernate 쿼리 로깅 비활성화
@@ -105,7 +105,7 @@ public class AuthControllerTest {
         } finally {
             executorService.shutdown();
             try {
-                if (!executorService.awaitTermination(30, TimeUnit.MINUTES)) {
+                if (!executorService.awaitTermination(180, TimeUnit.MINUTES)) {
                     executorService.shutdownNow(); // awaitTermination(1, TimeUnit.HOURS)
                 }
             } catch (InterruptedException e) {
